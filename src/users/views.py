@@ -1,21 +1,25 @@
 from django.shortcuts import render
-from .forms import LoginForm
+from .models import *
 # Create your views here.
 
 def home(request):
-    title = "Welcome All"
-    if request.user.is_authenticated():
-        title = "Welcome %s" %(request.user)
+    return render(request,"home.html",{})
 
-    form = LoginForm(request.POST or None)
+def signupuser(request):
 
     if form.is_valid():
-        instance = form.save(commit=True)
-        print instance
-
-
-    context = {
-        "title_temp" : title,
-        "form" : form
-    }
-    return render(request, "home.html", context)
+        uname = form.cleaned_data.get("uname")
+        email = form.cleaned_data.get("uname")
+        pword = form.cleaned_data.get("pword")
+        fname = form.cleaned_data.get("fname")
+        pno = form.cleaned_data.get("pno")
+        age = form.cleaned_data.get("age")
+        gen = form.cleaned_data.get("gen")
+        try:
+            User.objects.create_user(username=uname, email=email, password=pword, first_name=fname, last_name='').save()
+            UserDetail.objects.create(uid=uname, pno=pno, age=age, gen=gen)
+        except:
+            context = {
+                        "error" : True
+            }
+            return render(request, "UserReg.html",context)
