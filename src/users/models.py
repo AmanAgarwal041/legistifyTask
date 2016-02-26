@@ -20,4 +20,4 @@ class LawyerDetail(models.Model):
     gen = models.CharField(max_length=1, blank=False)
 
     def __unicode__(self):
-        return self.fname
+        return self.lid

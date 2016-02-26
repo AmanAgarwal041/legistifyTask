@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Legistify</title>
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
     <link href="../static/css/custom.css" rel="stylesheet">
   </head>
@@ -20,14 +21,14 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-      <a class="navbar-brand" href="/">Brand</a>
+      <a class="navbar-brand" href="/">Legistify</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		  <ul class="nav navbar-nav navbar-right">
-			<li><a href="/userreg">User</a></li>
-			<li><a href="/lawyerreg">Lawyer</a></li>
+			<li><a href="/signupuser">User</a></li>
+			<li><a href="/signuplawyer">Lawyer</a></li>
 			<li><a href="/login">Login</a></li>
 		  </ul>
 		</div><!-- /.navbar-collapse -->
@@ -37,21 +38,19 @@
 	<div id="static-box">
 			<ul id="static-list">
 				<li data-item="1">
-					<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+          <a href="/lawyerdashboard">
+					  <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+          </a>
 				</li>
 				<div id="data-item-1" class="items">
 					Dashboard
 				</div>
 				<li data-item="2">
-					<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+					<a href="/logout_view">
+            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+          </a>
 				</li>
 				<div id="data-item-2" class="items">
-					Profile
-				</div>
-				<li data-item="3">
-					<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-				</li>
-				<div id="data-item-3" class="items">
 					Logout
 				</div>
 			</ul>

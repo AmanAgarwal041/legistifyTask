@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Legistify</title>
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
     <link href="../static/css/custom.css" rel="stylesheet">
   </head>
@@ -20,14 +21,14 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-      <a class="navbar-brand" href="/">Brand</a>
+      <a class="navbar-brand" href="/">Legistify</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		  <ul class="nav navbar-nav navbar-right">
-			<li><a href="/userreg">User</a></li>
-			<li><a href="/lawyerreg">Lawyer</a></li>
+			<li><a href="/signupuser">User</a></li>
+			<li><a href="/signuplawyer">Lawyer</a></li>
 			<li><a href="/login">Login</a></li>
 		  </ul>
 		</div><!-- /.navbar-collapse -->
@@ -39,29 +40,42 @@
 		</div>
 		<div class="col-md-10" id="list-data">
 			<div class="col-sm-offset-2 col-sm-8">
-				<div class="alert alert-danger">
+				<div class="alert alert-info">
 					Enter the details to register as a Lawyer.
 				</div>
 			</div>
+      {% if error %}
+        <div class="col-sm-offset-2 col-sm-8">
+          <div class="alert alert-danger">
+            {{error_message}}
+          </div>
+        </div>
+      {% endif %}
 			<div class="container-fluid">
 				<div class="col-sm-offset-2 col-sm-8 well">
-					<form class="form-horizontal" method="Post" action="/userreg">
+					<form class="form-horizontal" method="Post" action="/signuplawyer/">{% csrf_token %}
 					  <div class="form-group">
 						<label for="uname" class="col-sm-4 control-label">Username</label>
 						<div class="col-sm-6">
-						  <input type="text" class="form-control" name="uname" placeholder="Enter your username">
+						  <input type="text" class="form-control" name="uname" placeholder="Enter your username" required>
+						</div>
+					  </div>
+            <div class="form-group">
+						<label for="fname" class="col-sm-4 control-label">Full Name</label>
+						<div class="col-sm-6">
+						  <input type="text" class="form-control" name="fname" placeholder="Enter your full name" required>
 						</div>
 					  </div>
 					  <div class="form-group">
 						<label for="email" class="col-sm-4 control-label">Email</label>
 						<div class="col-sm-6">
-						  <input type="email" class="form-control" name="email" placeholder="Enter your email">
+						  <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
 						</div>
 					  </div>
 					  <div class="form-group">
 						<label for="age" class="col-sm-4 control-label">Age</label>
 						<div class="col-sm-6">
-						  <input type="number" class="form-control" name="age" placeholder="Enter your age">
+						  <input type="number" class="form-control" name="age" placeholder="Enter your age" required>
 						</div>
 					  </div>
 					  <div class="form-group">
@@ -69,7 +83,7 @@
 						<div class="col-sm-6">
 							<div class="col-sm-6">
 								<label class="radio-inline">
-								  <input type="radio" name="gen" value="M"> Male
+								  <input type="radio" name="gen" value="M" checked="checked"> Male
 								</label>
 							</div>
 							<div class="col-sm-6">
@@ -82,31 +96,31 @@
 					  <div class="form-group">
 						<label for="speciality" class="col-sm-4 control-label">Speciality</label>
 						<div class="col-sm-6">
-							<textarea class="form-control" name="speciality" placeholder="Enter your speciality" rows="3"></textarea>
+							<textarea class="form-control" name="speciality" placeholder="Enter your speciality" rows="3" required></textarea>
 						</div>
 					  </div>
 					  <div class="form-group">
 						<label for="experience" class="col-sm-4 control-label">Experience</label>
 						<div class="col-sm-6">
-						  <input type="number" class="form-control" name="experience" placeholder="Enter your experience in years">
+						  <input type="number" class="form-control" name="experience" placeholder="Enter your experience in years" required>
 						</div>
 					  </div>
 					  <div class="form-group">
 						<label for="pno" class="col-sm-4 control-label">Phone number</label>
 						<div class="col-sm-6">
-						  <input type="number" class="form-control" name="pno" placeholder="Enter your phone number">
+						  <input type="number" class="form-control" name="pno" placeholder="Enter your phone number" required>
 						</div>
 					  </div>
 					  <div class="form-group">
 						<label for="pword" class="col-sm-4 control-label">Password</label>
 						<div class="col-sm-6">
-						  <input type="password" class="form-control" name="pword" placeholder="Enter your password">
+						  <input type="password" class="form-control" name="pword" placeholder="Enter your password" required>
 						</div>
 					  </div>
 					  <div class="form-group">
 						<label for="cpword" class="col-sm-4 control-label">Confirm Password</label>
 						<div class="col-sm-6">
-						  <input type="password" class="form-control" name="cpword" placeholder="Enter your password again">
+						  <input type="password" class="form-control" name="cpword" placeholder="Enter your password again" required>
 						</div>
 					  </div>
 					  <div class="form-group">

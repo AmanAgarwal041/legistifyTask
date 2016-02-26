@@ -4,10 +4,11 @@ from django.contrib import admin
 urlpatterns = [
     # Examples:
      url(r'^$', 'users.views.home', name='home'),
-     url(r'^userreg/$', 'users.views.signupuser', name='userreg'),
-     url(r'^lawyerreg/$', 'users.views.signuplawyer', name='lawyerreg'),
+     url(r'^signupuser/$', 'users.views.signupuser', name='signupuser'),
+     url(r'^signuplawyer/$', 'users.views.signuplawyer', name='signuplawyer'),
      url(r'^login/$', 'users.views.login', name='login'),
-     url(r'^d/$', 'users.views.d', name='userdashboard'),
+     url(r'^userdashboard/$', 'users.views.userdashboard', name='userdashboard'),
+     url(r'^lawyerdashboard/$', 'users.views.lawyerdashboard', name='lawyerdashboard'),
      url(r'^logout_view/$', 'users.views.logout_view', name='logout'),
     # url(r'^blog/', include('blog.urls')),
 
