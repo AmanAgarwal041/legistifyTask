@@ -68,54 +68,62 @@
 	<div class="container-fluid">
 		<div class="col-md-offset-1 col-md-10" id="list-data">
 			<div class="col-md-12">
-				<div class="alert alert-danger">
-					List of Users
+				<div class="alert alert-info">
+					List of Lawyers
 				</div>
 			</div>
-			<div class="container-fluid">
-				<div class="well col-xs-6 col-md-6">
-					<div class="row">
-					  <div class="col-xs-6 col-md-3">
-						<div class="thumbnail">
-						  <img src="../../static/img/law.png" alt="">
-						</div>
-					  </div>
-					  <div class="col-xs-6 col-md-9">
-						<h4>Aman Agarwal</h4>
-						<span>Description</span>
-					  </div>
-					</div>
-					<span>
-					<a href="" class="btn btn-small btn-primary"> Send Request</a>
-				</div><div class="well col-xs-6 col-md-6">
-					<div class="row">
-					  <div class="col-xs-6 col-md-3">
-						<div class="thumbnail">
-						  <img src="../static/img/law.png" alt="">
-						</div>
-					  </div>
-					  <div class="col-xs-6 col-md-9">
-						<h4>Aman Agarwal</h4>
-						<span>Description</span>
-					  </div>
-					</div>
-					<span>
-					<a href="" class="btn btn-small btn-primary"> Send Request</a>
-				</div><div class="well col-xs-6 col-md-6">
-					<div class="row">
-					  <div class="col-xs-6 col-md-3">
-						<div class="thumbnail">
-						  <img src="../static/img/law.png" alt="">
-						</div>
-					  </div>
-					  <div class="col-xs-6 col-md-9">
-						<h4>Aman Agarwal</h4>
-						<span>Description</span>
-					  </div>
-					</div>
-					<span>
-					<a href="" class="btn btn-small btn-primary"> Send Request</a>
-				</div>
+      {% if error %}
+        <div class="col-md-12">
+          <div class="alert alert-danger">
+            {{error_message}}
+          </div>
+        </div>
+      {% endif %}
+      <div class="container-fluid">
+        {% if lawyer_data %}
+          {% for lawyer in lawyer_data %}
+          				<div class="well col-xs-6 col-md-6">
+          					<div class="row">
+          					  <div class="col-xs-6 col-md-3">
+          						<div class="thumbnail">
+          						  <img src="../../static/img/law.png" alt="">
+          						</div>
+          					  </div>
+          					  <div class="col-xs-6 col-md-9">
+          						<h4  class="col-xs-12">{{lawyer.fname}}</h4>
+          						<span class="col-xs-6" style="font-weight:bold;">Gender:</span><span class="col-xs-6">{{lawyer.gen}}</span><br/>
+                      <span class="col-xs-6" style="font-weight:bold;">Age:</span><span class="col-xs-6">{{lawyer.age}}</span><br/>
+                      <span class="col-xs-6" style="font-weight:bold;">Speciality:</span><span class="col-xs-6">{{lawyer.speciality}}</span><br/>
+                      <span class="col-xs-6" style="font-weight:bold;">Experience:</span><span class="col-xs-6">{{lawyer.experience}}</span><br/>
+
+          					  </div>
+          					</div>
+                    {% if lawyer.status == 0 %}
+                        <span class="col-xs-6" style="font-weight:bold;">Contact no:</span><span class="col-xs-6"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span><br/>
+                        <span class="col-xs-6" style="font-weight:bold;">Email:</span><span class="col-xs-6"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span><br/>
+        					       <a href="/send_request/?lid={{lawyer.lid}}" class="btn btn-small btn-primary"> Send Request</a>
+                    {% elif lawyer.status == 1 %}
+                        <span class="col-xs-6" style="font-weight:bold;">Contact no:</span><span class="col-xs-6">{{lawyer.pno}}</span><br/>
+                        <span class="col-xs-6" style="font-weight:bold;">Email:</span><span class="col-xs-6">{{lawyer.email}}</span><br/>
+        					       <span class="btn btn-small btn-success"> Accepted!</span>
+                    {% elif lawyer.status == 2 %}
+                        <span class="col-xs-6" style="font-weight:bold;">Contact no:</span><span class="col-xs-6"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span><br/>
+                        <span class="col-xs-6" style="font-weight:bold;">Email:</span><span class="col-xs-6"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span><br/>
+        					       <span class="btn btn-small btn-warning"> Pending...</span>
+                    {% elif lawyer.status == 3 %}
+                        <span class="col-xs-6" style="font-weight:bold;">Contact no:</span><span class="col-xs-6"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span><br/>
+                        <span class="col-xs-6" style="font-weight:bold;">Email:</span><span class="col-xs-6"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span><br/>
+        					       <span class="btn btn-small btn-danger"> Rejected!</span>
+                    {% endif %}
+          				</div>
+            {% endfor %}
+          {% else%}
+            <div class="col-md-offset-1 col-md-10">
+              <div class="alert alert-danger">
+                No Lawyer Registered Yet...!!!
+              </div>
+            </div>
+          {% endif %}
 			</div>
 		</div>
 

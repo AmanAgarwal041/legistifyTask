@@ -21,3 +21,12 @@ class LawyerDetail(models.Model):
 
     def __unicode__(self):
         return self.lid
+
+class ContactLawyer(models.Model):
+    contact_id = models.AutoField(primary_key=True)
+    uid = models.CharField(max_length=120, blank=False)
+    lid = models.CharField(max_length=120, blank=False)
+    status = models.IntegerField(max_length=3, blank=False)
+
+    def __unicode__(self):
+        return str(self.contact_id)

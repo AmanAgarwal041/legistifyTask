@@ -66,58 +66,59 @@
 		</div>
 
 	<div class="container-fluid">
-		<div class="col-md-offset-1 col-md-10" id="list-data">
+    <div class="col-md-offset-1 col-md-10" id="list-data">
 			<div class="col-md-12">
-				<div class="alert alert-danger">
-					List of Users
+				<div class="alert alert-info">
+					List of Lawyers
 				</div>
 			</div>
-			<div class="container-fluid">
-				<div class="well col-xs-6 col-md-6">
-					<div class="row">
-					  <div class="col-xs-6 col-md-3">
-						<div class="thumbnail">
-						  <img src="../static/img/law.png" alt="">
-						</div>
-					  </div>
-					  <div class="col-xs-6 col-md-9">
-						<h4>Aman Agarwal</h4>
-						<span>Description</span>
-					  </div>
-					</div>
-					<span>
-					<a href="" class="btn btn-small btn-primary"> Send Request</a>
-				</div><div class="well col-xs-6 col-md-6">
-					<div class="row">
-					  <div class="col-xs-6 col-md-3">
-						<div class="thumbnail">
-						  <img src="../static/img/law.png" alt="">
-						</div>
-					  </div>
-					  <div class="col-xs-6 col-md-9">
-						<h4>Aman Agarwal</h4>
-						<span>Description</span>
-					  </div>
-					</div>
-					<span>
-					<a href="" class="btn btn-small btn-primary"> Send Request</a>
-				</div><div class="well col-xs-6 col-md-6">
-					<div class="row">
-					  <div class="col-xs-6 col-md-3">
-						<div class="thumbnail">
-						  <img src="../static/img/law.png" alt="">
-						</div>
-					  </div>
-					  <div class="col-xs-6 col-md-9">
-						<h4>Aman Agarwal</h4>
-						<span>Description</span>
-					  </div>
-					</div>
-					<span>
-					<a href="" class="btn btn-small btn-primary"> Send Request</a>
-				</div>
-			</div>
-		</div>
+      {% if error %}
+        <div class="col-md-12">
+          <div class="alert alert-danger">
+            {{error_message}}
+          </div>
+        </div>
+      {% endif %}
+      <div class="container-fluid">
+      {% if user_data %}
+      {% for user in user_data %}
+              <div class="well col-xs-6 col-md-6">
+                <div class="row">
+                  <div class="col-xs-6 col-md-3">
+                  <div class="thumbnail">
+                    <img src="../../static/img/law.png" alt="">
+                  </div>
+                  </div>
+                  <div class="col-xs-6 col-md-9">
+                  <h4 class="col-xs-12" style="font-weight:bold;color:#8e44ad;">{{user.fname}}</h4>
+                  <span class="col-xs-6" style="font-weight:bold;">Gender:</span><span class="col-xs-6">{{user.gen}}</span><br/>
+                  <span class="col-xs-6" style="font-weight:bold;">Age:</span><span class="col-xs-6">{{user.age}}</span><br/>
+                  <span class="col-xs-6" style="font-weight:bold;">Contact no:</span><span class="col-xs-6">{{user.pno}}</span><br/>
+                  <span class="col-xs-6" style="font-weight:bold;">Email:</span><span class="col-xs-6">{{user.email}}</span><br/>
+
+                  </div>
+                </div>
+                <span class="col-xs-6">Current Status:</span>
+                {% if user.status == 1 %}
+                     <span class="col-xs-offset-1 col-xs-3 btn btn-primary btn-xs"> Accepted</span><br/>
+                {% elif user.status == 2 %}
+                    <span class="col-xs-offset-1 col-xs-3 btn btn-primary btn-xs"> Pending</span><br/>
+                {% elif user.status == 3 %}
+                     <span class="col-xs-offset-1 col-xs-3 btn btn-primary btn-xs"> Rejected</span><br/>
+                {% endif %}
+                <br/>
+                <a href="/accept_request/?contact_id={{user.contact_id}}" class="btn btn-small btn-success col-xs-3">Accept</a>
+                <a href="/pending_request/?contact_id={{user.contact_id}}" class="btn btn-small btn-warning col-xs-offset-1 col-xs-3">Pending</a>
+                <a href="/reject_request/?contact_id={{user.contact_id}}" class="btn btn-small btn-danger col-xs-offset-1 col-xs-3">Reject</a>
+              </div>
+        {% endfor %}
+      {% else%}
+        <div class="col-md-offset-1 col-md-10">
+          <div class="alert alert-danger">
+            No user sent any requests yet...!!!
+          </div>
+        </div>
+      {% endif %}
 
 	</div>
 

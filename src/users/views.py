@@ -3,18 +3,20 @@ from .models import *
 from .forms import *
 from django.contrib import auth
 from django.contrib.auth.models import User
+from django.core import serializers
+import json
 # Create your views here.
 def home(request):
     return render(request,"home.html",{})
 
 def signupuser(request):
-	if request.session['type']:
+	if 'type' in request.session:
 		if request.session['type']=='user':
 			return redirect('/userdashboard/')
 		elif request.session['type']=='lawyer':
 			return redirect('/lawyerdashboard/')
 		else:
-			return redirect('/home/')
+			return redirect('/')
 	else:
 		if request.POST:
 			uname = request.POST["uname"]
@@ -58,13 +60,13 @@ def signupuser(request):
 			return render(request, "UserReg.html",{})
 
 def signuplawyer(request):
-	if request.session['type']:
+	if 'type' in request.session:
 		if request.session['type']=='user':
 			return redirect('/userdashboard/')
 		elif request.session['type']=='lawyer':
 			return redirect('/lawyerdashboard/')
 		else:
-			return redirect('/home/')
+			return redirect('/')
 	else:
 		if request.POST:
 			uname = request.POST["uname"]
@@ -111,13 +113,13 @@ def signuplawyer(request):
 
 
 def login(request):
-	if request.session['type']:
+	if 'type' in request.session:
 		if request.session['type']=='user':
 			return redirect('/userdashboard/')
 		elif request.session['type']=='lawyer':
 			return redirect('/lawyerdashboard/')
 		else:
-			return redirect('/home/')
+			return redirect('/')
 	else:
 		if request.POST:
 			uname = request.POST['uname']
@@ -160,26 +162,80 @@ def login(request):
 
 
 def userdashboard(request):
-	if request.session['type']:
-		if request.session['type']=='user':
-			return render(request, "UserDashboard.html", {})
-		elif request.session['type']=='lawyer':
-			return redirect('/lawyerdashboard/')
-		else:
-			return redirect('/home/')
-	else:
-		return redirect('/home/')
+    if 'type' in request.session:
+        if request.session['type']=='user':
+            try:
+                lawyers = serializers.serialize('json', LawyerDetail.objects.all())
+                law = json.loads(lawyers)
+                lawyer_data = []
+                for lawy in law:
+                    userInfo = User.objects.get(username=lawy["fields"]["lid"])
+                    sendreq = ContactLawyer.objects.filter(uid=request.user,lid=lawy["fields"]["lid"])
+                    if sendreq is not None and sendreq:
+                        sendStatus = sendreq[0].status
+                    else:
+                        sendStatus = 0
+                    all_detail = {
+                            "lid"   : lawy["fields"]["lid"],
+                            "speciality"   : lawy["fields"]["speciality"],
+                            "age"   : lawy["fields"]["age"],
+                            "experience"   : lawy["fields"]["experience"],
+                            "pno"   : lawy["fields"]["pno"],
+                            "gen"   : lawy["fields"]["gen"],
+                            "fname" : userInfo.first_name,
+                            "email" : userInfo.email,
+                            "status": sendStatus
+                    }
+                    lawyer_data.append(all_detail)
+            except Exception as e:
+                print '%s (%s)' % (e.message, type(e))
+            print len(lawyer_data)
+            context = {
+                    "lawyer_data":lawyer_data
+            }
+            return render(request, "UserDashboard.html", context)
+        elif request.session['type']=='lawyer':
+            return redirect('/lawyerdashboard/')
+        else:
+            return redirect('/')
+    else:
+        return redirect('/')
 
 def lawyerdashboard(request):
-	if request.session['type']:
-		if request.session['type']=='user':
+    if 'type' in request.session:
+        if request.session['type']=='lawyer':
+            try:
+                users_data = serializers.serialize('json', ContactLawyer.objects.filter(lid=request.user))
+                users_dt = json.loads(users_data)
+                users_dt_total = []
+                print "Test",users_dt
+                for usdt in users_dt:
+                    userInfo = User.objects.get(username=usdt["fields"]["uid"])
+                    userInfo_total = UserDetail.objects.get(uid=usdt["fields"]["uid"])
+                    all_detail = {
+                            "uid"   : usdt["fields"]["uid"],
+                            "age"   : userInfo_total.age,
+                            "pno"   : userInfo_total.pno,
+                            "gen"   : userInfo_total.gen,
+                            "fname" : userInfo.first_name,
+                            "email" : userInfo.email,
+                            "status": usdt["fields"]["status"],
+                            "contact_id":usdt["pk"]
+                        }
+                    users_dt_total.append(all_detail)
+            except Exception as e:
+                print '%s (%s)' % (e.message, type(e))
+            print len(users_dt_total)
+            context = {
+                    "user_data":users_dt_total
+            }
+            return render(request, "LawyerDashboard.html", context)
+        elif request.session['type']=='user':
 			return redirect('/userdashboard/')
-		elif request.session['type']=='lawyer':
-			return render(request, "LawyerDashboard.html", {})
-		else:
-			return redirect('/home/')
-	else:
-		return redirect('/home/')
+        else:
+			return redirect('/')
+    else:
+		return redirect('/')
 
 def logout_view(request):
     if request.user:
@@ -187,3 +243,65 @@ def logout_view(request):
         del request.session['type']
         auth.logout(request)
     return redirect('/')
+
+def send_request(request):
+    if 'type' in request.session:
+        if request.session['type']=='user':
+            try:
+                lid = request.GET['lid']
+                print "Test :",lid
+                ContactLawyer.objects.create(uid=request.user, lid=lid, status=2).save()
+            except Exception as e:
+				print '%s (%s)' % (e.message, type(e))
+            return redirect('/userdashboard/')
+        elif request.session['type']=='lawyer':
+            return redirect('/lawyerdashboard/')
+        else:
+			return redirect('/')
+    else:
+		return redirect('/')
+
+def accept_request(request):
+    if 'type' in request.session:
+        if request.session['type']=='user':
+            return redirect('/userdashboard/')
+        elif request.session['type']=='lawyer':
+            try:
+                contact_id = request.GET['contact_id']
+                ContactLawyer.objects.filter(pk=contact_id).update(status=1).save()
+            except Exception as e:
+				print '%s (%s)' % (e.message, type(e))
+            return redirect('/lawyerdashboard/')
+        else:
+            return redirect('/')
+    else:
+        return redirect('/')
+def reject_request(request):
+    if 'type' in request.session:
+        if request.session['type']=='user':
+            return redirect('/userdashboard/')
+        elif request.session['type']=='lawyer':
+            try:
+                contact_id = request.GET['contact_id']
+                ContactLawyer.objects.filter(pk=contact_id).update(status=3).save()
+            except Exception as e:
+				print '%s (%s)' % (e.message, type(e))
+            return redirect('/lawyerdashboard/')
+        else:
+            return redirect('/')
+    else:
+        return redirect('/')
+
+def pending_request(request):
+    if 'type' in request.session:
+        if request.session['type']=='user':
+            return redirect('/userdashboard/')
+        elif request.session['type']=='lawyer':
+            try:
+                contact_id = request.GET['contact_id']
+                ContactLawyer.objects.filter(pk=contact_id).update(status=2).save()
+            except Exception as e:
+				print '%s (%s)' % (e.message, type(e))
+            return redirect('/lawyerdashboard/')
+        else:
+			return redirect('/')
