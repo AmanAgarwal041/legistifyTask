@@ -28,6 +28,11 @@
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		  <ul class="nav navbar-nav navbar-right">
         {% if request.session.type %}
+			{% if request.session.type == 'user'%}
+    			<li><a href="/userdashboard">Dashboard</a></li>
+			{% elif request.session.type == 'lawyer'%}
+    			<li><a href="/lawyerdashboard">Dashboard</a></li>
+			{% endif %}
     			<li><a href="/logout_view">Logout</a></li>
         {% else %}
           <li><a href="/signupuser">User</a></li>
