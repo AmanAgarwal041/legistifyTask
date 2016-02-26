@@ -14,6 +14,14 @@
 .btn-custom{
 	border:2px solid black;
 	background:transparent;
+	width:200px;
+	font-weight: bold;
+	font-size: 20px;
+}
+.btn-custom:hover{
+	background:black;
+	color:white;
+	border:2px solid white;
 }
 .homepage{
 	background: #8c9899;
@@ -21,7 +29,7 @@
 	height:550px;
 }
 #homepage-fluid{
-	margin-top:200px;
+	margin-top:150px;
 }
 
 
