@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import *
 from .forms import *
+from django.contrib import auth
 # Create your views here.
 
 def home(request):
@@ -54,7 +55,7 @@ def signuplawyer(request):
 
 
 def login(request):
-    if request.user.is_authenticated():
+    if not request.user.is_authenticated():
         if request.POST:
             uname = request.POST['uname']
             pword = request.POST['pword']
@@ -70,3 +71,11 @@ def login(request):
 
         else:
             return render(request,"login.html",{})
+
+def d(request):
+    return render(request, "UserDashboard.html", {})
+
+def logout_view(request):
+    if request.user:
+        auth.logout(request)
+    return redirect('/')
