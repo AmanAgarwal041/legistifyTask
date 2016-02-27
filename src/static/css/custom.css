@@ -32,6 +32,12 @@
 	margin-top:150px;
 }
 
+.error{
+		background:#c0392b;
+		text-align: center;
+		height:550px;
+}
+
 
 
 #sidebar-wrapper {
