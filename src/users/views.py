@@ -7,17 +7,26 @@ from django.core import serializers
 import json
 # Create your views here.
 def home(request):
+    '''
+            Default Home Page
+    '''
     return render(request,"home.html",{})
 
 def signupuser(request):
-	if 'type' in request.session:
-		if request.session['type']=='user':
+    '''
+            User Register Page
+    '''
+    if 'type' in request.session:
+        '''
+            Checking for already Logged in user
+        '''
+        if request.session['type']=='user':
 			return redirect('/userdashboard/')
-		elif request.session['type']=='lawyer':
+        elif request.session['type']=='lawyer':
 			return redirect('/lawyerdashboard/')
-		else:
+        else:
 			return redirect('/')
-	else:
+    else:
 		if request.POST:
 			uname = request.POST["uname"]
 			email = request.POST["email"]
@@ -60,14 +69,20 @@ def signupuser(request):
 			return render(request, "UserReg.html",{})
 
 def signuplawyer(request):
-	if 'type' in request.session:
-		if request.session['type']=='user':
+    '''
+        Signing up Lawyer
+    '''
+    if 'type' in request.session:
+        '''
+            Checking for already Logged in user
+        '''
+        if request.session['type']=='user':
 			return redirect('/userdashboard/')
-		elif request.session['type']=='lawyer':
+        elif request.session['type']=='lawyer':
 			return redirect('/lawyerdashboard/')
-		else:
-			return redirect('/')
-	else:
+        else:
+            return redirect('/')
+    else:
 		if request.POST:
 			uname = request.POST["uname"]
 			email = request.POST["email"]
@@ -113,56 +128,72 @@ def signuplawyer(request):
 
 
 def login(request):
-	if 'type' in request.session:
-		if request.session['type']=='user':
+    '''
+        Logging in user
+    '''
+    if 'type' in request.session:
+        '''
+            Checking for already Logged in user
+        '''
+        if request.session['type']=='user':
 			return redirect('/userdashboard/')
-		elif request.session['type']=='lawyer':
+        elif request.session['type']=='lawyer':
 			return redirect('/lawyerdashboard/')
-		else:
+        else:
 			return redirect('/')
-	else:
-		if request.POST:
-			uname = request.POST['uname']
-			pword = request.POST['pword']
-			try:
+    else:
+        if request.POST:
+            uname = request.POST['uname']
+            pword = request.POST['pword']
+            try:
 				user = auth.authenticate(username=uname, password=pword)
-			except:
-				user = None
-			if user is not None:
-				try:
+            except:
+                user = None
+            if user is not None:
+                try:
 					usergetdetails = UserDetail.objects.get(uid=uname)
-				except:
+                except:
 					usergetdetails = None
-				try:
+                try:
 					lawyergetdetails = LawyerDetail.objects.get(lid=uname)
-				except:
+                except:
 					lawyergetdetails = None
-				if usergetdetails is not None and lawyergetdetails is None:
+
+            	'''
+                    Checking type of user : Lawyer or User
+                '''
+                if usergetdetails is not None and lawyergetdetails is None:
 					auth.login(request,user)
 					request.session['type'] = "user"
 					return redirect('/userdashboard/')
-				elif usergetdetails is None and lawyergetdetails is not None:
+                elif usergetdetails is None and lawyergetdetails is not None:
 					auth.login(request,user)
 					request.session['type'] = "lawyer"
 					return redirect('/lawyerdashboard/')
-				else:
-					context = {
+                else:
+                    context = {
 								"error" : True,
 								"error_message":"No such user registered!"
-					}
-					return render(request, "login.html",context)
-			else:
-				context ={
+					        }
+                    return render(request, "login.html",context)
+            else:
+                context ={
 					"error" : True,
 					"error_message":"Either Username or Password is wrong!"
 				}
-				return render(request, "login.html",{})
-		else:
+                return render(request, "login.html",{})
+        else:
 			return render(request,"login.html",{})
 
 
 def userdashboard(request):
+    '''
+        Dashboard of user
+    '''
     if 'type' in request.session:
+        '''
+            Checking for already Logged in user
+        '''
         if request.session['type']=='user':
             try:
                 lawyers = serializers.serialize('json', LawyerDetail.objects.all())
@@ -202,7 +233,13 @@ def userdashboard(request):
         return redirect('/')
 
 def lawyerdashboard(request):
+    '''
+        Dashboard of lawyer
+    '''
     if 'type' in request.session:
+        '''
+            Checking for already Logged in user
+        '''
         if request.session['type']=='lawyer':
             try:
                 users_data = serializers.serialize('json', ContactLawyer.objects.filter(lid=request.user))
@@ -239,13 +276,22 @@ def lawyerdashboard(request):
 
 def logout_view(request):
     if request.user:
+        '''
+            Log Out user
+        '''
         print "logdded out"
         del request.session['type']
         auth.logout(request)
     return redirect('/')
 
 def send_request(request):
+    '''
+        Sending request
+    '''
     if 'type' in request.session:
+        '''
+            Checking for already Logged in user
+        '''
         if request.session['type']=='user':
             try:
                 lid = request.GET['lid']
@@ -262,7 +308,13 @@ def send_request(request):
 		return redirect('/')
 
 def accept_request(request):
+    '''
+        Changing status to accepted
+    '''
     if 'type' in request.session:
+        '''
+            Checking for already Logged in user
+        '''
         if request.session['type']=='user':
             return redirect('/userdashboard/')
         elif request.session['type']=='lawyer':
@@ -277,7 +329,13 @@ def accept_request(request):
     else:
         return redirect('/')
 def reject_request(request):
+    '''
+        Changing status to rejected
+    '''
     if 'type' in request.session:
+        '''
+            Checking for already Logged in user
+        '''
         if request.session['type']=='user':
             return redirect('/userdashboard/')
         elif request.session['type']=='lawyer':
@@ -293,7 +351,13 @@ def reject_request(request):
         return redirect('/')
 
 def pending_request(request):
+    '''
+        Changing status to pending
+    '''
     if 'type' in request.session:
+        '''
+            Checking for already Logged in user
+        '''
         if request.session['type']=='user':
             return redirect('/userdashboard/')
         elif request.session['type']=='lawyer':
