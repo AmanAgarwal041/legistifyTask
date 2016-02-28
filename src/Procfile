@@ -1,1 +1,1 @@
-web: python myapp/manage.py collectstatic --noinput; gunicorn legistify.wsgi
+web:  gunicorn legistify.wsgi
