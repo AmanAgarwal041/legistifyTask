@@ -9,7 +9,7 @@ post==0.0.2
 public==0.0.2
 query-string==0.0.2
 request==0.0.2
-requests==2.2.1
+requests==2.20.0
 SecretStorage==2.0.0
 self==0.0.2
 simplejson==3.3.1
